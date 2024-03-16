@@ -1,0 +1,15 @@
+<launch>
+  <arg name="mocap_config_file" default="$(find ros_tello)/config/mocap.yaml" />
+  
+  <node pkg="mocap_optitrack"
+        type="mocap_node"
+        name="mocap_node"
+        respawn="false"
+        launch-prefix=""
+        required="true">
+    <rosparam file="$(arg mocap_config_file)" command="load" />
+  </node>
+  
+  <!-- Relay MoCap data to /mavros/vision_pose/pose -->
+  <node name="mavros_relay_mocap" pkg="topic_tools" type="relay" args="/mocap_node/Robot_1/pose /tello/vision_pose/pose" output="screen"/>
+</launch>
